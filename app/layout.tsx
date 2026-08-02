@@ -1,5 +1,11 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
+import { Header } from "@/components/layout/Header";
+import { CTA } from "@/components/layout/CTA";
+import { Footer } from "@/components/layout/Footer";
+import { CookieBanner } from "@/components/layout/CookieBanner";
+import { FloatingButton } from "@/components/layout/FloatingButton";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -10,6 +16,31 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+// Right Grotesk Tall, on the Top 10 rank numerals. Self-hosted from app/fonts
+// rather than public/, so the file is fingerprinted and preloaded by the font
+// pipeline instead of being served as a raw public asset.
+//
+// LICENCE: Pangram Pangram's free pack is personal-use only. A commercial
+// licence is required before this ships publicly.
+//
+// The free pack has no Tall Black, so the numerals settle between its extremes:
+// TallFine is hairline at display size, CompactBlack is too heavy. TightMedium
+// is the middle — condensed width, medium weight.
+//
+// Every cut in the pack shares identical vertical metrics (unitsPerEm 2048,
+// capHeight 1400, baseline 0.0708em above the line box bottom), so swapping the
+// src to any sibling file needs no repositioning in TopTen.
+//
+// Declared 400 because each file is a single weight — asking for a heavier one
+// only makes the browser synthesise a faux bold.
+const rightGrotesk = localFont({
+  src: "./fonts/RightGrotesk-TightMedium.otf",
+  variable: "--font-right-grotesk",
+  weight: "400",
+  style: "normal",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -25,9 +56,21 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${rightGrotesk.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col" suppressHydrationWarning>
+        <div className="mx-auto flex w-full max-w-7xl flex-1 flex-col border-x px-6">
+          <div className="flex flex-1 flex-col border-x">
+            <Header />
+            <main className="flex-1">{children}</main>
+            <CTA />
+            <Footer />
+          </div>
+        </div>
+
+        <FloatingButton />
+        <CookieBanner />
+      </body>
     </html>
   );
 }

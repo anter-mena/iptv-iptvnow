@@ -7,9 +7,12 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
+  --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-heading: var(--font-sans);
+  /* Right Grotesk Tall — declared by next/font/local in app/layout.tsx, which
+     emits the @font-face itself, so none is needed here. */
+  --font-tall: var(--font-right-grotesk), sans-serif;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -27,6 +30,8 @@
   --color-input: var(--input);
   --color-border: var(--border);
   --color-destructive: var(--destructive);
+  --color-badge: var(--badge);
+  --color-badge-foreground: var(--badge-foreground);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent: var(--accent);
   --color-muted-foreground: var(--muted-foreground);
@@ -46,6 +51,24 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+  --animate-marquee: marquee var(--duration) infinite linear;
+  --animate-marquee-vertical: marquee-vertical var(--duration) linear infinite;
+  @keyframes marquee {
+  from {
+    transform: translateX(0);
+    }
+  to {
+    transform: translateX(calc(-100% - var(--gap)));
+    }
+  }
+  @keyframes marquee-vertical {
+  from {
+    transform: translateY(0);
+    }
+  to {
+    transform: translateY(calc(-100% - var(--gap)));
+    }
+  }
 }
 
 :root {
@@ -64,6 +87,11 @@
   --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
+  /* The only saturated colour in the palette. The theme is otherwise pure
+     greyscale, so a status badge sitting on dark poster art needs its own hue
+     to register at all — primary is near-black and simply disappears. */
+  --badge: oklch(0.541 0.281 293.009);
+  --badge-foreground: oklch(0.985 0 0);
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
@@ -99,6 +127,8 @@
   --accent: oklch(0.269 0 0);
   --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.704 0.191 22.216);
+  --badge: oklch(0.606 0.25 292.717);
+  --badge-foreground: oklch(0.985 0 0);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.556 0 0);
@@ -115,6 +145,59 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+}
+
+/* Hides the scrollbar chrome without touching scrollability — wheel, trackpad,
+   touch drag, keyboard and scroll snapping all still work. scrollbar-width
+   covers Firefox and Chrome 121+; the ::-webkit rule covers older WebKit. */
+@utility scrollbar-none {
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Apple-style Liquid Glass.
+ *
+ * Deliberately no SVG feDisplacementMap here. That is the technique Apple's
+ * effect actually uses, but inside backdrop-filter it is Chromium-only, and a
+ * displacement map that is not shaped precisely to the element shears the whole
+ * backdrop instead of bending it at the rim — which reads as a ghosted second
+ * copy of everything behind the control.
+ *
+ * What sells glass at this size is the lighting, not the refraction:
+ *   - blur + saturate + a touch of brightness, so the backdrop shows through
+ *     lifted rather than merely dimmed
+ *   - a bright inset along the top edge: the specular catch
+ *   - a fainter inset along the bottom: light bouncing back up through the body
+ *   - a broad inner glow, giving the pane thickness
+ *   - an outer drop shadow lifting it off the surface
+ */
+@utility liquid-glass {
+  background-color: rgb(255 255 255 / 0.12);
+  border: 1px solid rgb(255 255 255 / 0.35);
+  /* Prefix first, standard last — reversing them lets the minifier collapse
+     the pair and keep only -webkit-, which drops Firefox. */
+  -webkit-backdrop-filter: blur(12px) saturate(180%) brightness(1.1);
+  backdrop-filter: blur(12px) saturate(180%) brightness(1.1);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.6),
+    inset 0 -1px 0 rgb(255 255 255 / 0.15),
+    inset 0 0 14px rgb(255 255 255 / 0.12),
+    0 8px 24px rgb(0 0 0 / 0.22);
+  transition:
+    background-color 200ms ease,
+    box-shadow 200ms ease;
+
+  &:hover {
+    background-color: rgb(255 255 255 / 0.2);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.75),
+      inset 0 -1px 0 rgb(255 255 255 / 0.2),
+      inset 0 0 18px rgb(255 255 255 / 0.18),
+      0 10px 28px rgb(0 0 0 / 0.26);
+  }
 }
 
 @layer base {
