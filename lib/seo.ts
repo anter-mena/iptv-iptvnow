@@ -19,20 +19,26 @@ export const DEFAULT_OG_IMAGE: { url: string; alt: string } | null = null;
  * Page metadata with an absolute canonical URL. Pass a short `title`: the brand
  * is appended here ("Title | Brand") as an absolute title, so the result is the
  * same whether or not the site's root layout has a title template.
+ *
+ * Pass `defaultImage: false` on pages that have their own opengraph-image file
+ * (blog and news posts): an image set here would replace the generated one.
  */
 export function buildMetadata({
   title,
   description,
   path,
   keywords,
+  defaultImage = true,
 }: {
   title: string;
   description: string;
   path: string;
   keywords?: string[];
+  defaultImage?: boolean;
 }): Metadata {
   const url = `${BASE_URL}${path}`;
   const fullTitle = `${title} | ${SITE_NAME}`;
+  const image = defaultImage ? DEFAULT_OG_IMAGE : null;
 
   return {
     title: { absolute: fullTitle },
@@ -42,9 +48,7 @@ export function buildMetadata({
       canonical: url,
     },
     openGraph: {
-      ...(DEFAULT_OG_IMAGE
-        ? { images: [{ url: DEFAULT_OG_IMAGE.url, width: 1200, height: 630, alt: DEFAULT_OG_IMAGE.alt }] }
-        : {}),
+      ...(image ? { images: [{ url: image.url, width: 1200, height: 630, alt: image.alt }] } : {}),
       title: fullTitle,
       description,
       url,
@@ -53,7 +57,7 @@ export function buildMetadata({
       type: "website",
     },
     twitter: {
-      ...(DEFAULT_OG_IMAGE ? { images: [DEFAULT_OG_IMAGE.url] } : {}),
+      ...(image ? { images: [image.url] } : {}),
       card: "summary_large_image",
       title: fullTitle,
       description,

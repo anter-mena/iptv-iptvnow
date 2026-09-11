@@ -24,6 +24,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description: item.meta.description,
     path: `${NEWS_SECTION.path}/${slug}`,
     keywords: item.meta.keywords.length > 0 ? item.meta.keywords : undefined,
+    // Share this item's own opengraph-image, not the site-wide default.
+    defaultImage: false,
   });
 
   return {
