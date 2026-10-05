@@ -2,6 +2,8 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { Clock, LifeBuoy, Mail, MessageCircle } from "lucide-react"
 
+import { ContactForm } from "@/components/contact/ContactForm"
+
 export const metadata: Metadata = {
   title: "Contact",
   description:
@@ -86,6 +88,18 @@ export default function ContactPage() {
             </li>
           ))}
         </ul>
+      </section>
+
+      <section className="border-b px-6 py-16 lg:px-8">
+        <div className="mx-auto max-w-3xl">
+          <h2 className="text-center text-2xl font-medium tracking-tight md:text-3xl">
+            Send us a message
+          </h2>
+          <p className="mx-auto mt-4 mb-10 max-w-xl text-center font-medium text-muted-foreground">
+            Prefer writing? Leave your details and we&apos;ll reply by email.
+          </p>
+          <ContactForm />
+        </div>
       </section>
 
       <section className="px-6 py-24 text-center lg:px-8">
