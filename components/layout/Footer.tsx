@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react"
+import Image from "next/image"
 import Link from "next/link"
-import { ArrowUpRight, Zap } from "lucide-react"
+import { ArrowUpRight } from "lucide-react"
 
 import { FlickeringGrid } from "@/components/ui/flickering-grid"
 import {
@@ -68,7 +69,7 @@ const FOOTER_COLUMNS = [
   },
 ]
 
-const WORDMARK = "Streamline your workflow"
+const WORDMARK = "Entertainment, everywhere"
 
 // Shared geometry only — both layers must use the same pitch so the clipped
 // wordmark stays in register with the ambient field behind it.
@@ -113,22 +114,29 @@ export function Footer() {
     // it spans the full outer frame rather than stopping at the inner one.
     <footer className="relative overflow-hidden">
       <div className="grid gap-12 px-6 pt-12 lg:grid-cols-[1fr_auto_auto_auto] lg:gap-x-16">
-        <div>
-          <Link href="/" className="flex items-center gap-2.5">
-            <span className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-              <Zap className="size-4" />
-            </span>
-            <span className="text-lg font-bold tracking-tight">IPTV NOW</span>
+        <div className="text-center lg:text-left">
+          <Link
+            href="/"
+            className="inline-flex"
+            aria-label="IPTV Now home"
+          >
+            <Image
+              src="/logo-footer.svg"
+              alt="IPTV Now"
+              width={112}
+              height={56}
+              className="h-14 w-auto"
+            />
           </Link>
 
-          <p className="mt-6 max-w-80 text-sm leading-7 text-muted-foreground">
+          <p className="mx-auto mt-6 max-w-80 text-sm leading-7 text-muted-foreground lg:mx-0">
             Premium streaming with thousands of live channels, movies and
             shows — your entertainment, everywhere, on every device
           </p>
 
           <ul
             aria-label="Accepted payment methods"
-            className="mt-8 flex flex-wrap items-center gap-x-4 gap-y-3"
+            className="mt-8 flex flex-wrap items-center justify-center gap-x-4 gap-y-3 lg:justify-start"
           >
             {PAYMENT_METHODS.map(({ label, Icon, className }) => (
               <li
@@ -146,7 +154,7 @@ export function Footer() {
                 year over rather than leaving a stale literal in the source. */}
             <p>&copy; {new Date().getFullYear()} IPTV NOW. All rights reserved.</p>
 
-            <ul className="flex flex-wrap items-center gap-x-4 gap-y-1">
+            <ul className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 lg:justify-start">
               {LEGAL_LINKS.map((link) => (
                 <li key={link.label}>
                   <Link
@@ -162,9 +170,18 @@ export function Footer() {
         </div>
 
         {FOOTER_COLUMNS.map((column) => (
-          <nav key={column.title}>
+          <nav
+            key={column.title}
+            className="text-center lg:text-left"
+          >
             <h2 className="text-sm font-semibold">{column.title}</h2>
-            <ul className="mt-5 space-y-3">
+            <ul
+              className={
+                column.title === "Quick Links"
+                  ? "mt-5 grid grid-cols-2 gap-x-6 gap-y-3 lg:grid-cols-1"
+                  : "mt-5 space-y-3"
+              }
+            >
               {column.links.map((link) => (
                 <li key={link.label}>
                   <Link
@@ -173,15 +190,17 @@ export function Footer() {
                       target: "_blank",
                       rel: "noreferrer",
                     })}
-                    className="group inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
+                    className="group inline-flex items-center justify-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground lg:justify-start"
                   >
                     {/* Underline sits on the label alone — on the anchor it
                         would run under the arrow too. */}
                     <span className="underline-offset-4 group-hover:underline">
                       {link.label}
                     </span>
-                    {/* Always in flow, so revealing it never reflows the row. */}
-                    <ArrowUpRight className="size-3.5 -translate-x-1 opacity-0 transition duration-200 group-hover:translate-x-0 group-hover:opacity-100" />
+                    {/* Keep the hover affordance on desktop. Hiding it on
+                        mobile prevents its reserved width from pushing the
+                        visible label off the column's true center. */}
+                    <ArrowUpRight className="hidden size-3.5 -translate-x-1 opacity-0 transition duration-200 group-hover:translate-x-0 group-hover:opacity-100 lg:block" />
                   </Link>
                 </li>
               ))}
@@ -190,7 +209,11 @@ export function Footer() {
         ))}
       </div>
 
-      <div className="relative mt-32 h-56" aria-hidden style={FADE_STYLE}>
+      <div
+        className="relative mt-12 h-56 lg:mt-32"
+        aria-hidden
+        style={FADE_STYLE}
+      >
         <FlickeringGrid
           {...GRID_PROPS}
           color="rgb(120, 120, 120)"
@@ -200,7 +223,7 @@ export function Footer() {
         <div className="absolute inset-0" style={CLIP_STYLE}>
           <FlickeringGrid
             {...GRID_PROPS}
-            color="rgb(0, 0, 0)"
+            color="rgb(233, 31, 42)"
             minOpacity={0.55}
             maxOpacity={1}
             className="absolute inset-0"

@@ -48,7 +48,7 @@ export function TableOfContents({
   if (items.length < 3) return null;
 
   const list = (
-    <ul className="flex flex-col gap-2 text-[13px]">
+    <ul className="flex flex-col gap-1.5 text-[13px]">
       {items.map((item) => (
         <li key={item.id} className={item.depth === 3 ? "pl-3" : undefined}>
           <a
@@ -69,12 +69,12 @@ export function TableOfContents({
 
   if (variant === "mobile") {
     return (
-      <details className="mb-8 rounded-xl border bg-card p-4 lg:hidden">
+      <details className="mb-6 rounded-sm border bg-card px-3 py-2.5 lg:hidden">
         <summary className="flex cursor-pointer list-none items-center gap-2 text-xs font-semibold text-muted-foreground">
           <List className="size-3.5" aria-hidden />
           On this page
         </summary>
-        <div className="mt-4 border-l">{list}</div>
+        <div className="mt-3 border-l">{list}</div>
       </details>
     );
   }

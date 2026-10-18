@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import rehypeSlug from "rehype-slug";
@@ -36,7 +36,7 @@ export function Article({ post, section }: { post: Post; section: ArticleSection
         ]}
       />
 
-      <section className="border-b px-6 py-16 text-center lg:px-8 lg:py-20">
+      <section className="page-header-rails border-b px-6 py-10 text-center lg:px-8 lg:py-12">
         <div className="mx-auto max-w-3xl">
           <Breadcrumbs
             items={[
@@ -46,14 +46,14 @@ export function Article({ post, section }: { post: Post; section: ArticleSection
             ]}
           />
 
-          <span className="inline-flex rounded-full bg-badge px-2.5 py-1 text-[10px] font-semibold tracking-wider text-badge-foreground uppercase">
-            {meta.category}
-          </span>
-          <h1 className="mt-5 text-2xl font-medium tracking-tight md:text-4xl">{meta.title}</h1>
-          <p className="mx-auto mt-4 max-w-2xl font-medium text-muted-foreground">
+          <p className="page-eyebrow">
+            {section.label} / {meta.category}
+          </p>
+          <h1 className="text-2xl font-medium tracking-tight md:text-4xl">{meta.title}</h1>
+          <p className="mx-auto mt-3 max-w-2xl text-sm font-medium text-muted-foreground md:text-base">
             {meta.description}
           </p>
-          <p className="mt-5 text-xs text-muted-foreground">
+          <p className="mt-3 text-xs text-muted-foreground">
             By {meta.author} ·{" "}
             {section.dateLine === "published" ? (
               <>
@@ -75,8 +75,8 @@ export function Article({ post, section }: { post: Post; section: ArticleSection
         </div>
       </section>
 
-      <section className="px-6 py-16 lg:px-8">
-        <div className="mx-auto max-w-5xl lg:grid lg:grid-cols-[minmax(0,1fr)_13rem] lg:items-start lg:gap-12">
+      <section className="px-4 py-8 sm:px-6 lg:px-8 lg:py-10">
+        <div className="mx-auto max-w-5xl lg:grid lg:grid-cols-[minmax(0,1fr)_13rem] lg:items-start lg:gap-10">
           <article className="mx-auto w-full max-w-[720px] min-w-0 lg:mx-0">
             <TableOfContents items={toc} variant="mobile" />
 
@@ -86,18 +86,28 @@ export function Article({ post, section }: { post: Post; section: ArticleSection
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 rehypePlugins={[rehypeRaw, rehypeSlug]}
-                components={{ img: PostImage }}
+                components={{
+                  img: PostImage,
+                  // Wide tables scroll sideways on phones inside this wrapper, so
+                  // the table itself can stay full width.
+                  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                  table: ({ node, ...props }) => (
+                    <div className="blog-table-scroll">
+                      <table {...props} />
+                    </div>
+                  ),
+                }}
               >
                 {content}
               </ReactMarkdown>
             </div>
 
             {(internal.length > 0 || sources.length > 0) && (
-              <div className="mt-16 grid gap-8 border-t pt-10 sm:grid-cols-2">
+              <div className="mt-10 grid gap-6 border-t pt-6 sm:grid-cols-2">
                 {internal.length > 0 && (
                   <div>
                     <h2 className="text-sm font-bold tracking-tight">Related reading</h2>
-                    <ul className="mt-4 space-y-2.5">
+                    <ul className="mt-3 space-y-2">
                       {internal.map((link) => (
                         <li key={link.href}>
                           <Link
@@ -116,7 +126,7 @@ export function Article({ post, section }: { post: Post; section: ArticleSection
                 {sources.length > 0 && (
                   <div>
                     <h2 className="text-sm font-bold tracking-tight">Sources</h2>
-                    <ul className="mt-4 space-y-2.5">
+                    <ul className="mt-3 space-y-2">
                       {sources.map((link) => (
                         <li key={link.href}>
                           <a
@@ -135,17 +145,17 @@ export function Article({ post, section }: { post: Post; section: ArticleSection
               </div>
             )}
 
-            <div className="mt-14 flex flex-wrap items-center justify-center gap-3">
+            <div className="mt-8 flex flex-wrap items-center gap-2">
               <Link
                 href={section.path}
-                className="flex h-9 items-center justify-center gap-1.5 rounded-full border px-5 text-xs font-medium transition-colors hover:bg-muted"
+                className="flex h-9 items-center justify-center gap-1.5 rounded-sm border px-4 text-xs font-medium transition-colors hover:bg-muted"
               >
                 <ArrowLeft className="size-3.5" aria-hidden />
                 {section.backLabel}
               </Link>
               <Link
                 href={section.next.href}
-                className="flex h-9 items-center justify-center rounded-full bg-primary px-5 text-xs font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
+                className="flex h-9 items-center justify-center rounded-sm bg-primary px-4 text-xs font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
               >
                 {section.next.label}
               </Link>
@@ -159,19 +169,19 @@ export function Article({ post, section }: { post: Post; section: ArticleSection
       </section>
 
       {meta.faqs.length > 0 && (
-        <section className="border-t px-6 py-16 lg:px-8">
+        <section className="border-t px-4 py-8 sm:px-6 lg:px-8 lg:py-10">
           <div className="mx-auto max-w-3xl">
-            <h2 className="text-center text-2xl font-medium tracking-tight md:text-3xl">
+            <h2 className="text-xl font-semibold tracking-tight md:text-2xl">
               Frequently asked questions
             </h2>
 
             {/* A plain list, not an accordion: every answer stays in the page
                 HTML, where search engines read it next to the FAQ schema. */}
-            <dl className="mt-10 divide-y border-y">
+            <dl className="mt-5 divide-y border-y">
               {meta.faqs.map((item) => (
-                <div key={item.question} className="py-5">
+                <div key={item.question} className="py-3.5">
                   <dt className="text-sm font-bold tracking-tight">{item.question}</dt>
-                  <dd className="mt-2 text-sm leading-6 text-muted-foreground">{item.answer}</dd>
+                  <dd className="mt-1 text-sm leading-6 text-muted-foreground">{item.answer}</dd>
                 </div>
               ))}
             </dl>

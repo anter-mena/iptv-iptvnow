@@ -76,17 +76,17 @@ const CARD_DOTS = [
   {
     at: "top-3 right-3",
     from: "-translate-x-1.5 translate-y-1.5",
-    delay: "delay-75",
+    delay: "group-hover:delay-75",
   },
   {
     at: "bottom-3 right-3",
     from: "-translate-x-1.5 -translate-y-1.5",
-    delay: "delay-150",
+    delay: "group-hover:delay-150",
   },
   {
     at: "bottom-3 left-3",
     from: "translate-x-1.5 -translate-y-1.5",
-    delay: "delay-200",
+    delay: "group-hover:delay-200",
   },
 ]
 
@@ -94,11 +94,6 @@ const CARD_DOTS = [
 // and a hairline light shadow beneath lifts the rim back out.
 const DOT_SHADOW =
   "shadow-[inset_0_1px_1px_0_rgb(0_0_0/0.35),0_1px_0_0_rgb(255_255_255/0.7)]"
-
-const HATCH: CSSProperties = {
-  backgroundImage:
-    "repeating-linear-gradient(45deg, var(--border) 0, var(--border) 1px, transparent 1px, transparent 8px)",
-}
 
 // Drawn as a mask rather than an <img> so the glyph takes currentColor and can
 // be themed, the same way the footer's payment marks work.
@@ -137,23 +132,22 @@ export function FeaturesGrid() {
       id="features"
       className="grid grid-cols-[1.5rem_1fr_1.5rem] border-b lg:grid-cols-[3.5rem_1fr_3.5rem]"
     >
-      <div className="border-r" style={HATCH} aria-hidden />
+      <div className="hatch-rail border-r" aria-hidden />
 
       <div>
         <div className="px-6 py-16 text-center">
           <h2 className="text-2xl font-medium tracking-tight md:text-3xl">
-            Everything You Need to Move Faster
+            Everything You Need to Stream Better
           </h2>
           <p className="mx-auto mt-4 max-w-2xl font-medium text-muted-foreground">
-            A complete toolkit for automating the work that slows your team
-            down.
+            Live TV, sports, movies and reliable 4K streaming on every device.
           </p>
         </div>
 
         {/* The border-t has to span the full column, so any width cap sits on
             an inner wrapper rather than on the rule itself. */}
         <div className="border-t px-6 py-10">
-          <ul className="mx-auto grid max-w-2xl gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
+          <ul className="mx-auto grid w-fit grid-cols-[repeat(2,8rem)] gap-2.5 sm:w-auto sm:max-w-2xl sm:grid-cols-2 lg:grid-cols-4">
             {FEATURES.map((feature) => (
               // Square, per the reference — which is also what lets the two
               // states be absolutely positioned and cross-fade without the card
@@ -171,7 +165,7 @@ export function FeaturesGrid() {
                 ))}
 
                 {/* Resting state — icon tile above the title. */}
-                <div className="flex flex-col items-center transition-all duration-300 ease-out group-hover:scale-95 group-hover:opacity-0 motion-reduce:transition-none">
+                <div className="flex flex-col items-center transition-opacity duration-300 ease-out group-hover:opacity-0 motion-reduce:transition-none">
                   {/* Drop shadow plus an inset highlight, so the tile sits
                       slightly proud of the card while its face reads pressed. */}
                   <span className="relative flex size-11 items-center justify-center rounded-lg bg-muted shadow-[0_1px_2px_0_rgb(0_0_0/0.08),inset_0_1px_3px_0_rgb(0_0_0/0.10)]">
@@ -215,7 +209,7 @@ export function FeaturesGrid() {
         </div>
       </div>
 
-      <div className="border-l" style={HATCH} aria-hidden />
+      <div className="hatch-rail border-l" aria-hidden />
     </section>
   )
 }

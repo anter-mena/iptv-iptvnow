@@ -11,6 +11,13 @@ import { useState } from "react"
 import { CheckCircle2, Loader2 } from "lucide-react"
 
 import { submitContactForm, type ContactStatus } from "@/lib/contact"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { cn } from "@/lib/utils"
 
 const TOPICS = [
@@ -107,24 +114,25 @@ export function ContactForm() {
 
       <div className="flex flex-col gap-1.5">
         <label htmlFor="subject" className={STYLES.label}>What&apos;s it about?</label>
-        <select
+        <Select
           id="subject"
           name="subject"
-          value={subject}
-          onChange={(e) => setSubject(e.target.value)}
+          value={subject || null}
+          onValueChange={(value) => setSubject(value ?? "")}
           required
           disabled={submitting}
-          className={cn(STYLES.field, !subject && "text-muted-foreground")}
         >
-          <option value="" disabled>
-            Select a topic
-          </option>
-          {TOPICS.map((topic) => (
-            <option key={topic} value={topic} className="text-foreground">
-              {topic}
-            </option>
-          ))}
-        </select>
+          <SelectTrigger className={cn(STYLES.field, "data-[size=default]:h-10")}>
+            <SelectValue placeholder="Select a topic" />
+          </SelectTrigger>
+          <SelectContent align="start">
+            {TOPICS.map((topic) => (
+              <SelectItem key={topic} value={topic}>
+                {topic}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       <div className="flex flex-col gap-1.5">

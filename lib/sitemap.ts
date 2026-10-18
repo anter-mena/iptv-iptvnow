@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 
 import { getAllPosts } from "@/lib/blog";
 import { getAllNews } from "@/lib/news";
+import { DEVICE_GUIDES, GUIDES_PATH, deviceGuideHref } from "@/lib/installation-guides";
 import { BASE_URL } from "@/lib/seo";
 
 // Each section is served at /sitemap/<section>.xml and listed by the index at /sitemap.xml
@@ -12,12 +13,13 @@ export type SitemapSection = (typeof sitemapSections)[number];
 // Last real content change of each page, taken from git history. Update a date
 // only when that page's visible content changes — not for design, metadata or
 // code-only changes — so search engines can keep trusting these dates.
-// Pages that still show only a heading (FAQ, installation guides, legal pages)
-// are left out on purpose: add them here, with their date, once they have content.
 const pageLastModified = {
   home: "2026-08-02",
   aboutUs: "2026-08-02",
   contact: "2026-08-02",
+  faq: "2026-10-18",
+  installationGuides: "2026-10-18",
+  legal: "2026-10-18",
   // The listing pages' own date; a newer post moves them forward automatically.
   blogHub: "2026-09-10",
   newsHub: "2026-09-10",
@@ -93,6 +95,30 @@ export function getSitemapEntries(section: SitemapSection): MetadataRoute.Sitema
       changeFrequency: "monthly",
       priority: 0.8,
     },
+    {
+      url: `${BASE_URL}/faq`,
+      lastModified: toDate(pageLastModified.faq),
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
+      url: `${BASE_URL}${GUIDES_PATH}`,
+      lastModified: toDate(pageLastModified.installationGuides),
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
+    ...DEVICE_GUIDES.map((guide) => ({
+      url: `${BASE_URL}${deviceGuideHref(guide.slug)}`,
+      lastModified: toDate(pageLastModified.installationGuides),
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
+    })),
+    ...["privacy-policy", "terms-of-use", "refund-policy", "general-disclaimer"].map((slug) => ({
+      url: `${BASE_URL}/${slug}`,
+      lastModified: toDate(pageLastModified.legal),
+      changeFrequency: "yearly" as const,
+      priority: 0.3,
+    })),
   ];
 }
 

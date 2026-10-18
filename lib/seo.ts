@@ -8,10 +8,13 @@ export const SITE_NAME = "IPTV NOW";
 export const BASE_URL = "https://iptvnow.ca";
 
 /** Publisher logo in article structured data, or null if the site has none. */
-export const LOGO_URL: string | null = null;
+export const LOGO_URL: string | null = `${BASE_URL}/icon.png`;
 
 /** Social image for pages without their own opengraph-image, or null. */
-export const DEFAULT_OG_IMAGE: { url: string; alt: string } | null = null;
+export const DEFAULT_OG_IMAGE: { url: string; alt: string } | null = {
+  url: "/opengraph-image.png",
+  alt: "IPTV NOW — Premium IPTV streaming in Canada.",
+};
 
 // ── Shared helpers: identical on every site ──
 
@@ -101,7 +104,7 @@ export function articleJsonLd(meta: PostMeta, section: ArticleSection) {
     description: meta.description,
     datePublished: meta.date,
     dateModified: meta.updated,
-    ...(meta.image ? { image: meta.image } : {}),
+    ...(meta.image ? { image: meta.image.startsWith("/") ? `${BASE_URL}${meta.image}` : meta.image } : {}),
     author: { "@type": "Organization", name: meta.author },
     publisher: {
       "@type": "Organization",

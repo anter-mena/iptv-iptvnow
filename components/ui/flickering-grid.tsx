@@ -30,7 +30,7 @@ export const FlickeringGrid: React.FC<FlickeringGridProps> = ({
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
-  const [isInView, setIsInView] = useState(false)
+  const isInViewRef = useRef(false)
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 })
 
   const memoizedColor = useMemo(() => {
@@ -151,7 +151,10 @@ export const FlickeringGrid: React.FC<FlickeringGridProps> = ({
 
       let lastTime = 0
       const animate = (time: number) => {
-        if (!isInView || !gridParams) return
+        if (!isInViewRef.current || !gridParams) {
+          animationFrameId = null
+          return
+        }
 
         const deltaTime = (time - lastTime) / 1000
         lastTime = time
@@ -183,15 +186,19 @@ export const FlickeringGrid: React.FC<FlickeringGridProps> = ({
       // Animation is still suspended when far off-screen.
       intersectionObserver = new IntersectionObserver(
         ([entry]) => {
-          setIsInView(entry.isIntersecting)
+          isInViewRef.current = entry.isIntersecting
+
+          if (entry.isIntersecting && animationFrameId === null) {
+            lastTime = performance.now()
+            animationFrameId = requestAnimationFrame(animate)
+          } else if (!entry.isIntersecting && animationFrameId !== null) {
+            cancelAnimationFrame(animationFrameId)
+            animationFrameId = null
+          }
         },
         { threshold: 0, rootMargin: "600px" }
       )
       intersectionObserver.observe(canvas)
-
-      if (isInView) {
-        animationFrameId = requestAnimationFrame(animate)
-      }
     }
 
     return () => {
@@ -205,7 +212,7 @@ export const FlickeringGrid: React.FC<FlickeringGridProps> = ({
         intersectionObserver.disconnect()
       }
     }
-  }, [setupCanvas, updateSquares, drawGrid, width, height, isInView])
+  }, [setupCanvas, updateSquares, drawGrid, width, height])
 
   return (
     <div

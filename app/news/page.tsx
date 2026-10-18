@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 
 import { PostGrid } from "@/components/blog/post-grid";
 import { JsonLd } from "@/components/seo/json-ld";
@@ -35,9 +35,10 @@ export default function NewsPage() {
         ]}
       />
 
-      <section className="border-b px-6 py-24 text-center lg:px-8">
+      <section className="page-header-rails border-b px-6 py-12 text-center lg:px-8 lg:py-14">
+        <p className="page-eyebrow">Latest Updates</p>
         <h1 className="text-2xl font-medium tracking-tight md:text-3xl">IPTV NOW News</h1>
-        <p className="mx-auto mt-4 max-w-2xl font-medium text-muted-foreground">
+        <p className="mx-auto mt-3 max-w-2xl text-sm font-medium text-muted-foreground md:text-base">
           {NEWS_DESCRIPTION}
         </p>
       </section>

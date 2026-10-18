@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useSyncExternalStore } from "react"
-import Link from "next/link"
 import { Check } from "lucide-react"
 
 import { CurrencyFlag } from "@/components/landing/CurrencyFlag"
@@ -33,6 +32,7 @@ const FEATURES = [
 // The visitor's currency choice, remembered in localStorage. Held in memory too,
 // so the switch still works when storage is blocked (private mode, disabled cookies).
 const CURRENCY_STORAGE_KEY = "iptvnow-currency"
+const WHATSAPP_NUMBER = "212787736166"
 const currencyListeners = new Set<() => void>()
 let selectedCurrency: Currency | null = null
 
@@ -135,6 +135,12 @@ export function Pricing() {
         {PLAN_DURATIONS.map((duration, index) => {
           const featured = duration === POPULAR_DURATION
           const { amount, symbol } = priceParts(PRICES[currency][devices][index], currency)
+          const whatsappMessage = `Hello! I want to subscribe to *IPTV NOW*.
+
+*Plan:* ${duration}
+*Devices:* ${deviceLabel(devices)}
+*Price:* ${amount} ${symbol}`
+          const whatsappHref = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(whatsappMessage)}`
 
           return (
             <div
@@ -180,17 +186,19 @@ export function Pricing() {
                   Stream on {deviceLabel(devices)} at the same time.
                 </p>
 
-                <Link
-                  href="/#pricing"
+                <a
+                  href={whatsappHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className={cn(
                     "mt-8 flex h-9 items-center justify-center rounded-full text-xs font-semibold shadow-sm transition-colors",
                     featured
                       ? "bg-primary text-primary-foreground hover:bg-primary/90"
-                      : "border bg-background text-foreground hover:bg-muted"
+                      : "border-white bg-white text-black hover:bg-white/90"
                   )}
                 >
                   Get Started
-                </Link>
+                </a>
               </div>
 
               <div className="border-t p-6">

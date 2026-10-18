@@ -1,6 +1,5 @@
 "use client"
 
-import type { CSSProperties } from "react"
 import { useCallback, useEffect, useRef, useState } from "react"
 import Image from "next/image"
 import { ChevronLeft, ChevronRight } from "lucide-react"
@@ -17,18 +16,25 @@ const VISIBLE = 2
 /** Matches the CSS transition, so one gesture cannot outrun one step. */
 const STEP_MS = 450
 
-const HATCH: CSSProperties = {
-  backgroundImage:
-    "repeating-linear-gradient(45deg, var(--border) 0, var(--border) 1px, transparent 1px, transparent 8px)",
-}
-
 const DEPTH = [
-  { scale: 1, opacity: 1, saturate: 1 },
-  { scale: 0.9, opacity: 0.8, saturate: 0.7 },
-  { scale: 0.78, opacity: 0.5, saturate: 0.35 },
+  { scale: 1, opacity: 1, saturate: 1, brightness: 1 },
+  { scale: 0.9, opacity: 0.8, saturate: 0.7, brightness: 1 },
+  { scale: 0.78, opacity: 0.5, saturate: 0.35, brightness: 1 },
 ]
 
-const depthAt = (k: number) => DEPTH[Math.min(k, DEPTH.length - 1)]
+// On phones the side cards are clipped by the screen edge and compete with the
+// centre one for attention, so they fade much further back. Scales match DEPTH
+// so the spacing from centreAt stays the same.
+const DEPTH_MOBILE = [
+  { scale: 1, opacity: 1, saturate: 1, brightness: 1 },
+  { scale: 0.9, opacity: 0.35, saturate: 0.2, brightness: 0.6 },
+  { scale: 0.78, opacity: 0.15, saturate: 0, brightness: 0.5 },
+]
+
+/** Below Tailwind's `sm` breakpoint, matching the card width switch. */
+const MOBILE_QUERY = "(max-width: 639px)"
+
+const depthAt = (k: number, table = DEPTH) => table[Math.min(k, table.length - 1)]
 
 /**
  * Centre position of the card `k` steps out, in px.
@@ -55,6 +61,7 @@ export function Testimonials() {
 
   const [index, setIndex] = useState(0)
   const [width, setWidth] = useState(0)
+  const [isMobile, setIsMobile] = useState(false)
 
   // Every card keeps its own DOM node and is placed by its signed distance from
   // the centre, so advancing the index slides the whole set by one. A card that
@@ -80,6 +87,7 @@ export function Testimonials() {
   useEffect(() => {
     const measure = () => {
       if (sizerRef.current) setWidth(sizerRef.current.offsetWidth)
+      setIsMobile(window.matchMedia(MOBILE_QUERY).matches)
     }
 
     measure()
@@ -114,7 +122,7 @@ export function Testimonials() {
 
   return (
     <section className="grid grid-cols-[1.5rem_1fr_1.5rem] border-b lg:grid-cols-[3.5rem_1fr_3.5rem]">
-      <div className="border-r" style={HATCH} aria-hidden />
+      <div className="hatch-rail border-r" aria-hidden />
 
       <div className="min-w-0">
         <div className="px-6 py-16 text-center">
@@ -142,7 +150,7 @@ export function Testimonials() {
             {REVIEWS.map((file, i) => {
               const offset = offsetOf(i)
               const distance = Math.abs(offset)
-              const depth = depthAt(distance)
+              const depth = depthAt(distance, isMobile ? DEPTH_MOBILE : DEPTH)
               const hidden = distance > VISIBLE
               const x = Math.sign(offset) * centreAt(distance, width)
 
@@ -153,7 +161,7 @@ export function Testimonials() {
                   style={{
                     transform: `translateX(${x}px) scale(${depth.scale})`,
                     opacity: hidden ? 0 : depth.opacity,
-                    filter: `saturate(${depth.saturate})`,
+                    filter: `saturate(${depth.saturate}) brightness(${depth.brightness})`,
                     zIndex: COUNT - distance,
                     pointerEvents: hidden ? "none" : undefined,
                   }}
@@ -193,7 +201,7 @@ export function Testimonials() {
         </div>
       </div>
 
-      <div className="border-l" style={HATCH} aria-hidden />
+      <div className="hatch-rail border-l" aria-hidden />
     </section>
   )
 }

@@ -37,6 +37,12 @@ export const PRICES: Record<Currency, Record<DeviceCount, PriceRow>> = {
 /** Shown after the amount, so the two dollar currencies are never ambiguous. */
 const CURRENCY_SYMBOLS: Record<Currency, string> = { CAD: "$CA", USD: "$US", EUR: "€" };
 
+/** Lowest and highest price across every plan, for structured data. */
+export function priceRange(currency: Currency) {
+  const prices = Object.values(PRICES[currency]).flat();
+  return { low: Math.min(...prices), high: Math.max(...prices), count: prices.length };
+}
+
 export function isCurrency(value: unknown): value is Currency {
   return (CURRENCIES as readonly unknown[]).includes(value);
 }

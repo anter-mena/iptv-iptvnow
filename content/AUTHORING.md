@@ -55,7 +55,7 @@ draft: true                   # optional — keeps the post off the live site
 | `date` | ✅ | `YYYY-MM-DD`. Controls ordering (newest first). |
 | `updated` | — | Change it **only for a real content update** (new section, corrected facts, new steps). It feeds the sitemap and "Updated" line, and Google stops trusting dates that change without real edits. Falls back to `date`. |
 | `category` | — | One or two words, shown on the card. |
-| `image` | — | Card image. Omit → a blue gradient is used. |
+| `image` | — | Card image (16:10, e.g. 1600×1000 WebP). Omit → a red brand gradient is used. |
 | `keywords` | — | 4–8 phrases. |
 | `faqs` | — | 3–5 recommended. |
 | `related` | — | Internal `/…` links = **Related reading**; `http…` links = **Sources**. |
@@ -137,8 +137,8 @@ Always give images meaningful `alt` text.
 **SEO**
 - Primary keyword in the `title`, the **first paragraph** and **one heading**.
 - **2–4 internal links** to pages that exist: the homepage (`/`), pricing (`/#pricing`),
-  `/about-us`, `/contact` and other posts. Link to `/installation-guides` and `/faq`
-  only once those pages have real content.
+  `/about-us`, `/contact`, `/faq`, `/installation-guides` (or a device guide such as
+  `/installation-guides/fire-tv`) and other posts.
 - 3–5 `faqs` targeting real "People also ask" questions.
 - Descriptive `alt` text on every image.
 

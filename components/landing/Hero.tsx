@@ -16,6 +16,7 @@ export function Hero() {
           alt=""
           fill
           priority
+          unoptimized
           sizes="100vw"
           className="object-cover"
         />
@@ -25,9 +26,14 @@ export function Hero() {
             every poster behind it. */}
         <div className="absolute inset-0 bg-black/65" />
 
-        {/* Deepens top and bottom, then resolves to the page background so the
-            section hands off to the marquee instead of stopping on a hard edge. */}
-        <div className="absolute inset-0 bg-linear-to-b from-black/50 via-transparent to-background" />
+        {/* Deepens the top, under the header. */}
+        <div className="absolute inset-x-0 top-0 h-1/3 bg-linear-to-b from-black/50 to-transparent" />
+
+        {/* Resolves to the page background so the section hands off to the
+            marquee without a hard edge. It turns solid before the bottom and
+            overhangs by 1px: fractional svh heights on phones otherwise leave a
+            hairline of artwork showing at the seam. */}
+        <div className="absolute inset-x-0 -bottom-px h-1/2 bg-linear-to-b from-transparent via-background/85 via-70% to-background to-95%" />
       </div>
 
       <Link
@@ -35,7 +41,7 @@ export function Hero() {
         className="inline-flex h-7 items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3 text-sm text-white shadow-sm backdrop-blur-md transition-colors hover:bg-white/20"
       >
         <Layers className="size-3.5" />
-        Introducing custom automations
+        Latest IPTV News &amp; Updates
       </Link>
 
       <h1 className="mt-12 text-4xl font-semibold tracking-tight text-white md:text-[4rem] md:leading-none">

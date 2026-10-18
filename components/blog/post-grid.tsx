@@ -4,9 +4,6 @@ import { ArrowUpRight, Newspaper } from "lucide-react";
 
 import { formatDate, type ArticleSection, type PostMeta } from "@/lib/content";
 
-const CARD_SHADOW =
-  "shadow-[0_1px_2px_0_rgb(0_0_0/0.04),0_4px_12px_-2px_rgb(0_0_0/0.10)]";
-
 /** Card grid for the blog and news listing pages, with an empty state. */
 export function PostGrid({
   posts,
@@ -46,15 +43,15 @@ export function PostGrid({
   }
 
   return (
-    <section className="px-6 py-16 lg:px-8">
-      <ul className="mx-auto grid max-w-5xl gap-3 sm:grid-cols-2 lg:grid-cols-3">
+    <section className="px-4 py-8 sm:px-6 lg:px-8 lg:py-10">
+      <ul className="mx-auto grid max-w-6xl gap-2 sm:grid-cols-2 lg:grid-cols-3">
         {posts.map((post) => (
           <li key={post.slug}>
             <Link
               href={`${section.path}/${post.slug}`}
-              className={`group flex h-full flex-col overflow-hidden rounded-xl border bg-card ${CARD_SHADOW}`}
+              className="group flex h-full flex-col overflow-hidden rounded-sm border bg-card transition-colors hover:border-primary/60 focus-visible:border-primary focus-visible:outline-none"
             >
-              <div className="relative aspect-16/10 overflow-hidden bg-muted">
+              <div className="relative aspect-16/9 overflow-hidden border-b bg-muted">
                 {post.image ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
@@ -62,23 +59,23 @@ export function PostGrid({
                     alt=""
                     loading="lazy"
                     decoding="async"
-                    className="absolute inset-0 size-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                    className="absolute inset-0 size-full object-cover transition-opacity duration-300 group-hover:opacity-85 motion-reduce:transition-none"
                   />
                 ) : (
-                  <div className="absolute inset-0 bg-linear-to-br from-[#1D4ED8]/25 to-[#3B72F5]/5" />
+                  <div className="absolute inset-0 bg-linear-to-br from-brand-red/25 to-brand-dark/5" />
                 )}
-                <span className="absolute top-3 left-3 rounded-full bg-badge px-2.5 py-1 text-[10px] font-semibold tracking-wider text-badge-foreground uppercase">
+                <span className="absolute top-2 left-2 rounded-xs bg-badge px-1.5 py-0.5 text-[10px] font-semibold tracking-wider text-badge-foreground uppercase">
                   {post.category}
                 </span>
               </div>
 
-              <div className="flex flex-1 flex-col p-6">
-                <h2 className="text-sm font-bold tracking-tight">{post.title}</h2>
-                <p className="mt-2 flex-1 text-xs leading-5 text-muted-foreground">
+              <div className="flex flex-1 flex-col p-4">
+                <h2 className="text-[15px] leading-snug font-semibold tracking-tight group-hover:text-primary">{post.title}</h2>
+                <p className="mt-1.5 line-clamp-2 flex-1 text-[13px] leading-5 text-muted-foreground">
                   {post.description}
                 </p>
 
-                <div className="mt-5 flex items-center gap-2 text-[11px] text-muted-foreground">
+                <div className="mt-3 flex items-center gap-2 border-t pt-3 text-[11px] text-muted-foreground">
                   <time dateTime={post.date}>{formatDate(post.date)}</time>
                   <span aria-hidden>·</span>
                   <span>{post.readingTime} min read</span>

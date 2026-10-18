@@ -1,11 +1,6 @@
 import Link from "next/link"
 
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion"
+import { FaqAccordion } from "@/components/ui/faq-accordion"
 
 const FAQS = [
   {
@@ -54,14 +49,7 @@ export function FAQ() {
       </div>
 
       <div className="border-t px-6 py-20 lg:px-8">
-        <Accordion className="mx-auto max-w-3xl">
-          {FAQS.map((faq) => (
-            <AccordionItem key={faq.question}>
-              <AccordionTrigger>{faq.question}</AccordionTrigger>
-              <AccordionContent>{faq.answer}</AccordionContent>
-            </AccordionItem>
-          ))}
-        </Accordion>
+        <FaqAccordion items={FAQS} className="mx-auto max-w-3xl" />
 
         <div className="mt-16 text-center">
           <p className="text-sm font-semibold">Still have questions?</p>

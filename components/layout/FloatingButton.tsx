@@ -5,8 +5,7 @@ import { MessageCircle, X } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
-// Neither mark exists in lucide-react v1 — it dropped brand glyphs — so both
-// are inlined, the same approach the footer's payment marks use.
+// Brand glyphs are not included in lucide-react, so WhatsApp is inlined.
 const WhatsAppIcon = ({ className }: { className?: string }) => (
   <svg
     viewBox="0 0 24 24"
@@ -19,38 +18,16 @@ const WhatsAppIcon = ({ className }: { className?: string }) => (
   </svg>
 )
 
-const TelegramIcon = ({ className }: { className?: string }) => (
-  <svg
-    viewBox="0 0 24 24"
-    className={className}
-    fill="currentColor"
-    aria-hidden
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path d="M20.665 3.717l-17.73 6.837c-1.21.486-1.203 1.161-.222 1.462l4.552 1.42 10.532-6.645c.498-.303.953-.14.579.192l-8.533 7.701h-.002l.002.001-.314 4.692c.46 0 .663-.211.921-.46l2.211-2.15 4.599 3.397c.848.467 1.457.227 1.668-.785l3.019-14.228c.309-1.239-.473-1.8-1.282-1.434z" />
-  </svg>
-)
-
-// Brand hues stay literal — WhatsApp green and Telegram blue are recognition
-// cues, so theming them away would cost more than it gains. Everything else
-// runs on the project's tokens.
+// WhatsApp green stays literal as a recognition cue. Everything else runs on
+// the project's tokens.
 const CHANNELS = [
   {
     name: "WhatsApp",
     tagline: "Fastest response",
-    href: "https://wa.me/16728962606",
+    href: "https://wa.me/212787736166?text=Hello!%20I%20am%20interested%20in%20starting%20a%20*Free%20Trial*%20for%20*IPTV%20NOW*.",
     color: "#25D366",
     Icon: WhatsAppIcon,
     nudge: "",
-  },
-  {
-    name: "Telegram",
-    tagline: "Chat with our team",
-    href: "https://t.me/+16728962606",
-    color: "#229ED9",
-    Icon: TelegramIcon,
-    // The glyph sits optically right of centre in its own viewBox.
-    nudge: "relative -left-[2px]",
   },
 ]
 
@@ -85,7 +62,7 @@ export function FloatingButton() {
             Support Options
           </p>
           <h3 className="text-[12px] leading-snug font-bold">
-            How would you like to connect with our team?
+            Chat with our team on WhatsApp
           </h3>
         </div>
 

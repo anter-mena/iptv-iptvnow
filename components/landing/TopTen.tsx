@@ -1,19 +1,60 @@
-import type { CSSProperties } from "react"
+"use client"
+
 import Image from "next/image"
+import { useEffect, useRef, useState } from "react"
 
 // Named topTenData, not topTen: Windows resolves paths case-insensitively, so
 // a topTen.ts sitting beside TopTen.tsx makes "./TopTen" ambiguous.
 import { TOP_TEN } from "./topTenData"
 
-const HATCH: CSSProperties = {
-  backgroundImage:
-    "repeating-linear-gradient(45deg, var(--border) 0, var(--border) 1px, transparent 1px, transparent 8px)",
-}
-
 export function TopTen() {
+  const railRef = useRef<HTMLUListElement>(null)
+  const dragRef = useRef({
+    pointerId: -1,
+    startX: 0,
+    scrollLeft: 0,
+    moved: false,
+  })
+  const [isDragging, setIsDragging] = useState(false)
+
+  useEffect(() => {
+    const rail = railRef.current
+    if (!rail) return
+
+    const handleWheel = (event: WheelEvent) => {
+      const delta =
+        Math.abs(event.deltaX) > Math.abs(event.deltaY)
+          ? event.deltaX
+          : event.deltaY
+      const maxScroll = rail.scrollWidth - rail.clientWidth
+      const canScroll =
+        (delta > 0 && rail.scrollLeft < maxScroll) ||
+        (delta < 0 && rail.scrollLeft > 0)
+
+      if (canScroll) {
+        event.preventDefault()
+        rail.scrollLeft += delta
+      }
+    }
+
+    rail.addEventListener("wheel", handleWheel, { passive: false })
+    return () => rail.removeEventListener("wheel", handleWheel)
+  }, [])
+
+  const finishDrag = (pointerId: number) => {
+    const rail = railRef.current
+
+    if (rail?.hasPointerCapture(pointerId)) {
+      rail.releasePointerCapture(pointerId)
+    }
+
+    dragRef.current.pointerId = -1
+    setIsDragging(false)
+  }
+
   return (
     <section className="grid grid-cols-[1.5rem_1fr_1.5rem] border-b lg:grid-cols-[3.5rem_1fr_3.5rem]">
-      <div className="border-r" style={HATCH} aria-hidden />
+      <div className="hatch-rail border-r" aria-hidden />
 
       {/* min-w-0 is load-bearing: a 1fr track defaults to min-width:auto, so it
           would stretch to the rail's full scroll width and push the whole page
@@ -40,7 +81,53 @@ export function TopTen() {
             snapport, which ignores padding unless scroll-padding is set, so
             without this the rail snaps straight past the left padding at rest
             and the space only appears mid-scroll. */}
-        <ul className="scrollbar-none flex snap-x snap-mandatory scroll-pl-12 gap-6 overflow-x-auto overflow-y-hidden border-t py-10 pr-6 pl-12">
+        <ul
+          ref={railRef}
+          aria-label="Top 10 titles. Drag, scroll, or use the arrow keys to navigate."
+          tabIndex={0}
+          className={`scrollbar-none flex cursor-grab scroll-pl-12 gap-6 overflow-x-auto overflow-y-hidden border-t py-10 pr-6 pl-12 select-none touch-pan-y focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-primary ${
+            isDragging ? "cursor-grabbing snap-none" : "snap-x snap-mandatory"
+          }`}
+          onDragStart={(event) => event.preventDefault()}
+          onPointerDown={(event) => {
+            if (event.button !== 0) return
+
+            const rail = railRef.current
+            if (!rail) return
+
+            dragRef.current = {
+              pointerId: event.pointerId,
+              startX: event.clientX,
+              scrollLeft: rail.scrollLeft,
+              moved: false,
+            }
+            rail.setPointerCapture(event.pointerId)
+            setIsDragging(true)
+          }}
+          onPointerMove={(event) => {
+            const rail = railRef.current
+            const drag = dragRef.current
+
+            if (!rail || drag.pointerId !== event.pointerId) return
+
+            const distance = event.clientX - drag.startX
+            if (Math.abs(distance) > 3) drag.moved = true
+            if (drag.moved) event.preventDefault()
+            rail.scrollLeft = drag.scrollLeft - distance
+          }}
+          onPointerUp={(event) => finishDrag(event.pointerId)}
+          onPointerCancel={(event) => finishDrag(event.pointerId)}
+          onKeyDown={(event) => {
+            const rail = railRef.current
+            if (!rail || !["ArrowLeft", "ArrowRight"].includes(event.key)) return
+
+            event.preventDefault()
+            rail.scrollBy({
+              left: event.key === "ArrowRight" ? 200 : -200,
+              behavior: "smooth",
+            })
+          }}
+        >
           {TOP_TEN.map((item, index) => (
             // `relative` is load-bearing: the sr-only label below is absolutely
             // positioned, and without a positioned ancestor inside the scroll
@@ -57,6 +144,7 @@ export function TopTen() {
                     src={item.posterUrl}
                     alt=""
                     fill
+                    draggable={false}
                     sizes="(min-width: 640px) 176px, 144px"
                     className="object-cover"
                   />
@@ -106,7 +194,7 @@ export function TopTen() {
         </ul>
       </div>
 
-      <div className="border-l" style={HATCH} aria-hidden />
+      <div className="hatch-rail border-l" aria-hidden />
     </section>
   )
 }

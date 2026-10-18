@@ -1,8 +1,9 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Anton, Geist, Geist_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import Script from "next/script";
-import { BASE_URL, SITE_NAME } from "@/lib/seo";
+import { BASE_URL, LOGO_URL, SITE_NAME } from "@/lib/seo";
+import { JsonLd } from "@/components/seo/json-ld";
 import { Header } from "@/components/layout/Header";
 import { CTA } from "@/components/layout/CTA";
 import { Footer } from "@/components/layout/Footer";
@@ -18,6 +19,13 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+const anton = Anton({
+  variable: "--font-anton",
+  subsets: ["latin"],
+  weight: "400",
+  display: "swap",
 });
 
 // Right Grotesk Tall, on the Top 10 rank numerals. Self-hosted from app/fonts
@@ -54,11 +62,59 @@ export const metadata: Metadata = {
   },
   description:
     "Stream 25,000+ live channels and 120,000+ movies and shows on any device. Canadian IPTV with 24/7 support and a free trial.",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon.svg", type: "image/svg+xml" },
+    ],
+    apple: [{ url: "/icon.png", sizes: "512x512", type: "image/png" }],
+  },
   openGraph: {
     siteName: SITE_NAME,
     locale: "en_CA",
     type: "website",
+    images: [
+      {
+        url: "/opengraph-image.png",
+        width: 1200,
+        height: 630,
+        alt: `${SITE_NAME} — Premium IPTV Streaming in Canada`,
+      },
+    ],
   },
+  twitter: {
+    card: "summary_large_image",
+    images: ["/opengraph-image.png"],
+  },
+};
+
+export const viewport: Viewport = {
+  colorScheme: "dark",
+  themeColor: "#010101",
+};
+
+// Site-wide identity for search engines: who publishes the site and its name.
+const siteJsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": `${BASE_URL}/#organization`,
+      name: SITE_NAME,
+      url: BASE_URL,
+      logo: LOGO_URL,
+      description:
+        "Canadian IPTV service streaming live TV, sports, movies and series on Fire TV, Android, Smart TV, Apple devices and more.",
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${BASE_URL}/#website`,
+      name: SITE_NAME,
+      url: BASE_URL,
+      inLanguage: "en-CA",
+      publisher: { "@id": `${BASE_URL}/#organization` },
+    },
+  ],
 };
 
 export default function RootLayout({
@@ -69,10 +125,11 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${rightGrotesk.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${anton.variable} ${rightGrotesk.variable} dark h-full antialiased`}
     >
       <body className="min-h-full flex flex-col" suppressHydrationWarning>
-        <div className="mx-auto flex w-full max-w-7xl flex-1 flex-col border-x px-6">
+        <JsonLd data={[siteJsonLd]} />
+        <div className="mx-auto flex w-full max-w-7xl flex-1 flex-col px-0 sm:border-x sm:px-6">
           <div className="flex flex-1 flex-col border-x">
             <Header />
             <main className="flex-1">{children}</main>

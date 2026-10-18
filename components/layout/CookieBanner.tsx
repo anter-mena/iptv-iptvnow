@@ -66,24 +66,26 @@ export function CookieBanner() {
       role="dialog"
       aria-label="Cookie notice"
       // Above the floating button, below the header's dropdowns.
-      className="fixed inset-x-4 bottom-4 z-40 mx-auto max-w-2xl rounded-xl border bg-card/85 p-4 shadow-lg backdrop-blur-md backdrop-saturate-150 sm:inset-x-6"
+      className="fixed inset-x-2 bottom-2 z-[60] mx-auto max-w-2xl rounded-xl border bg-card/85 p-3 shadow-lg backdrop-blur-md backdrop-saturate-150 sm:inset-x-6 sm:bottom-4 sm:p-4"
     >
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-        <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-muted">
-          <Cookie className="size-4" aria-hidden />
-        </span>
+        <div className="flex min-w-0 flex-1 items-start gap-3 sm:items-center">
+          <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-muted">
+            <Cookie className="size-4" aria-hidden />
+          </span>
 
-        <p className="flex-1 text-xs leading-5 text-muted-foreground">
-          We use cookies to keep the site running and to understand how it is
-          used. See our{" "}
-          <Link
-            href="/privacy-policy"
-            className="font-medium text-foreground underline-offset-4 hover:underline"
-          >
-            Privacy Policy
-          </Link>
-          .
-        </p>
+          <p className="flex-1 text-xs leading-5 text-muted-foreground">
+            We use cookies to keep the site running and to understand how it is
+            used. See our{" "}
+            <Link
+              href="/privacy-policy"
+              className="font-medium text-foreground underline-offset-4 hover:underline"
+            >
+              Privacy Policy
+            </Link>
+            .
+          </p>
+        </div>
 
         <div className="flex shrink-0 items-center gap-2">
           <button

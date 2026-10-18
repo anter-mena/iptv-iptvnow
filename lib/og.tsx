@@ -44,7 +44,7 @@ export function articleOgImage({
             right: 0,
             height: 10,
             display: "flex",
-            background: "linear-gradient(90deg, #1D4ED8, #3B72F5)",
+            background: "linear-gradient(90deg, #b5121b, #e91f2a)",
           }}
         />
         <div
@@ -56,7 +56,7 @@ export function articleOgImage({
             height: 520,
             display: "flex",
             borderRadius: 9999,
-            background: "radial-gradient(circle, rgba(59,114,245,0.35) 0%, transparent 70%)",
+            background: "radial-gradient(circle, rgba(233,31,42,0.35) 0%, transparent 70%)",
           }}
         />
 
@@ -89,7 +89,7 @@ export function articleOgImage({
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-          <span style={{ fontSize: 22, fontWeight: 700, letterSpacing: 5, color: "#8fb0ff" }}>
+          <span style={{ fontSize: 22, fontWeight: 700, letterSpacing: 5, color: "#ff7a82" }}>
             {eyebrow.toUpperCase()}
           </span>
           <span

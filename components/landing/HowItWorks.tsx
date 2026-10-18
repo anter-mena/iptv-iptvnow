@@ -87,7 +87,7 @@ export function HowItWorks() {
                     connector runs behind the tiles, and a translucent fill
                     would show it striking through each icon. */}
                 <div className="relative flex size-12 items-center justify-center rounded-xl bg-muted shadow-[0_1px_2px_0_rgb(0_0_0/0.08),inset_0_1px_3px_0_rgb(0_0_0/0.10)]">
-                  <step.icon className="size-5 text-primary" aria-hidden />
+                  <step.icon className="size-5 text-white" aria-hidden />
 
                   {TILE_DOTS.map((position) => (
                     <span
@@ -97,7 +97,7 @@ export function HowItWorks() {
                     />
                   ))}
                 </div>
-                <span className="absolute -top-1.5 -right-1.5 flex size-5 items-center justify-center rounded-full bg-primary text-[0.6rem] font-bold text-primary-foreground">
+                <span className="absolute -top-1.5 -right-1.5 flex size-5 items-center justify-center rounded-full bg-white text-[0.6rem] font-bold text-primary">
                   {String(index + 1).padStart(2, "0")}
                 </span>
               </div>
